@@ -51,3 +51,15 @@ Thumbs.db
 # Build outputs
 dist/
 build/
+
+# Test files (exclude from repository)
+test*.json
+test*.txt
+test*.mp4
+downloaded*.mp4
+example*.json
+*.test.*
+
+# Development files
+debug.log
+*.orig
