@@ -55,7 +55,10 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    queue: 'connected'
+    queue: 'connected',
+    repository: 'https://github.com/CioravaBogdan/videoeditor',
+    version: '1.0.0',
+    author: 'Bogdan Ciorava'
   });
 });
 
