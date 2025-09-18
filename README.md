@@ -1,5 +1,7 @@
 # Video Render Queue System
 
+**Official Repository:** https://github.com/CioravaBogdan/videoeditor
+
 A scalable video rendering system designed to replace Editly with improved performance and GPU acceleration support. This system uses Redis-based job queues to handle multiple concurrent video processing jobs efficiently.
 
 ## 🚀 Features
