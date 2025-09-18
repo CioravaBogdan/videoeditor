@@ -1,0 +1,35 @@
+# Development Docker Compose override
+version: '3.8'
+
+services:
+  render-api:
+    build:
+      context: ./render-api
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./render-api/src:/app/src
+    command: ["npm", "run", "dev"]
+
+  worker-cpu:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./worker/src:/app/src
+    command: ["npm", "run", "dev"]
+    deploy:
+      replicas: 2
+
+  worker-gpu:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile.dev
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./worker/src:/app/src
+    command: ["npm", "run", "dev"]

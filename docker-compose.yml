@@ -1,0 +1,123 @@
+version: '3.8'
+
+services:
+  # Redis for queue management
+  redis:
+    image: redis:7-alpine
+    container_name: video-render-redis
+    ports:
+      - "3031:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Render API service
+  render-api:
+    build: ./render-api
+    container_name: video-render-api
+    ports:
+      - "3030:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN:-http://localhost:3030}
+      - AUTO_CLEANUP_ENABLED=${AUTO_CLEANUP_ENABLED:-true}
+      - CLEANUP_AFTER_HOURS=${CLEANUP_AFTER_HOURS:-2}
+    volumes:
+      - ./uploads:/uploads
+      - ./outputs:/outputs
+      - ./temp:/tmp
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # CPU workers (always running)
+  worker-cpu:
+    build: ./worker
+    environment:
+      - NODE_ENV=production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - USE_GPU=false
+      - WORKER_CONCURRENCY=${CPU_WORKER_CONCURRENCY:-2}
+      - WORKER_ID=cpu-worker-${HOSTNAME:-unknown}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN:-http://localhost:3001}
+      - AUTO_CLEANUP_ENABLED=${AUTO_CLEANUP_ENABLED:-true}
+      - CLEANUP_AFTER_HOURS=${CLEANUP_AFTER_HOURS:-2}
+    volumes:
+      - ./uploads:/uploads
+      - ./outputs:/outputs
+      - ./temp:/tmp
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      replicas: ${CPU_WORKER_REPLICAS:-4}
+      resources:
+        limits:
+          cpus: '8.0'
+          memory: 4G
+        reservations:
+          cpus: '4.0'
+          memory: 4G
+
+  # GPU workers (scale to 0 by default, scale up on demand)
+  worker-gpu:
+    build: ./worker
+    environment:
+      - NODE_ENV=production
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - USE_GPU=true
+      - WORKER_CONCURRENCY=${GPU_WORKER_CONCURRENCY:-1}
+      - WORKER_ID=gpu-worker-${HOSTNAME:-unknown}
+      - WEBHOOK_URL=${WEBHOOK_URL}
+      - EXTERNAL_DOMAIN=${EXTERNAL_DOMAIN:-http://localhost:3001}
+      - AUTO_CLEANUP_ENABLED=${AUTO_CLEANUP_ENABLED:-true}
+      - CLEANUP_AFTER_HOURS=${CLEANUP_AFTER_HOURS:-2}
+    volumes:
+      - ./uploads:/uploads
+      - ./outputs:/outputs
+      - ./temp:/tmp
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      replicas: ${GPU_WORKER_REPLICAS:-0}
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    runtime: nvidia
+    profiles:
+      - gpu
+
+volumes:
+  redis_data:
+
+networks:
+  default:
+    name: video-render-network

@@ -1,0 +1,49 @@
+{
+  "outputFilename": "example_with_uploaded_audio.mp4",
+  "editSpec": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "clips": [
+      {
+        "duration": 4,
+        "layers": [
+          {
+            "type": "image",
+            "path": "https://via.placeholder.com/1080x1920/FF0000/FFFFFF?text=Slide+1"
+          },
+          {
+            "type": "audio",
+            "path": "/app/uploads/files-1757001703497-812942446.mp3"
+          }
+        ]
+      },
+      {
+        "duration": 4,
+        "layers": [
+          {
+            "type": "image",
+            "path": "https://via.placeholder.com/1080x1920/00FF00/000000?text=Slide+2"
+          },
+          {
+            "type": "audio",
+            "path": "/app/uploads/files-1757001703501-685607924.mp3"
+          }
+        ]
+      },
+      {
+        "duration": 4,
+        "layers": [
+          {
+            "type": "image",
+            "path": "https://via.placeholder.com/1080x1920/0000FF/FFFFFF?text=Slide+3"
+          },
+          {
+            "type": "audio",
+            "path": "/app/uploads/files-1757001703502-545732970.mp3"
+          }
+        ]
+      }
+    ]
+  }
+}

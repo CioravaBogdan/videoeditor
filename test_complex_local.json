@@ -1,0 +1,36 @@
+{
+  "outputFilename": "test_complex_local.mp4",
+  "editSpec": {
+    "width": 1024,
+    "height": 1536,
+    "fps": 30,
+    "clips": [
+      {
+        "duration": 3,
+        "layers": [
+          {
+            "type": "image",
+            "path": "/uploads/files-1758134469999-115901666.png"
+          },
+          {
+            "type": "audio",
+            "path": "/uploads/files-1758134040408-474430567.mp3"
+          }
+        ]
+      },
+      {
+        "duration": 3,
+        "layers": [
+          {
+            "type": "image", 
+            "path": "/uploads/files-1758134469999-115901666.png"
+          },
+          {
+            "type": "audio",
+            "path": "/uploads/files-1758134040408-474430567.mp3"
+          }
+        ]
+      }
+    ]
+  }
+}

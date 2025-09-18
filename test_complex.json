@@ -1,0 +1,36 @@
+{
+  "outputFilename": "test_complex_video.mp4",
+  "editSpec": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "clips": [
+      {
+        "duration": 4,
+        "layers": [
+          {
+            "type": "image",
+            "path": "https://via.placeholder.com/1080x1920/FF0000/FFFFFF?text=Slide+1"
+          },
+          {
+            "type": "audio", 
+            "path": "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+          }
+        ]
+      },
+      {
+        "duration": 4,
+        "layers": [
+          {
+            "type": "image", 
+            "path": "https://via.placeholder.com/1080x1920/00FF00/000000?text=Slide+2"
+          },
+          {
+            "type": "audio",
+            "path": "https://www.learningcontainer.com/wp-content/uploads/2020/02/Kalimba.mp3"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+# GPU-enabled Docker Compose override
+version: '3.8'
+
+services:
+  worker-gpu:
+    deploy:
+      replicas: 1
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    runtime: nvidia
