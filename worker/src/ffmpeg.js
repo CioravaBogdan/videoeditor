@@ -479,8 +479,10 @@ const processEditlyFormat = async (jobData, tempId, progressCallback) => {
     const clipDuration = clip.duration;
     
     // Find image and audio layers
-    const imageLayers = clip.layers.filter(layer => layer.type === 'image');
-    const audioLayers = clip.layers.filter(layer => layer.type === 'audio');
+    // Accept both 'image' and 'image-overlay' as valid visual bases
+    const imageLayers = clip.layers.filter(layer => layer && (layer.type === 'image' || layer.type === 'image-overlay'));
+    // Accept common audio layer naming variants
+    const audioLayers = clip.layers.filter(layer => layer && (layer.type === 'audio' || layer.type === 'audioTrack'));
     
     if (imageLayers.length > 0) {
       const imageLayer = imageLayers[0]; // Take first image layer
